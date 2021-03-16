@@ -1,0 +1,23 @@
+#
+# Sigma contine cuvintele:
+#
+Sigma:
+    a
+    b
+End
+#
+# Si avem urmatoarele stari
+#
+States:
+	S, S
+	A, F
+	B, F
+End
+#
+# Si urmatoarele tranzitii
+#
+Transitions:
+	S, a, A
+	A, a, A
+	S, b, B
+	B, b, B
