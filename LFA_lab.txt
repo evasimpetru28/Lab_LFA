@@ -2,7 +2,7 @@
 # Sigma contine cuvintele (sau litere poti considera):
 #
 Sigma:
-    a
+	a
 	b
 	c
 	1
