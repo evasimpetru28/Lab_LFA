@@ -6,7 +6,7 @@ End
 # Si avem urmatoarele stari
 States:
 	1, S, F
-    2
+	2
 	3
 	4, F
 End

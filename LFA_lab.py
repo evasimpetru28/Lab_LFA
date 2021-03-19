@@ -1,6 +1,6 @@
 import sys
 
-f = open("1.5h.in")
+f = open(sys.argv[1])
 
 #ignoram liniile cu comentarii
 
@@ -96,30 +96,33 @@ for i in range(1,4):
 f.close()
 
 if error == 0:
-    word = input()
+    word = sys.argv[2]
     last_state = ''
     double_state = ''
     for key in States:
         if States[key] == 'S':
             last_state = key
         else:
-            if States[key] == "S, F":
+            if States[key] == 'S, F':
                 double_state = key
+                last_state = double_state
     if double_state != '' and word == '':
-            print("Este un DFA.")
+            print("Cuvantul vid este acceptat.")
             last_state = double_state
     else:
-        for i in range(len(word)):
+        i = 0
+        while i <= len(word)-1:
             last_state = check_transition(word[i], last_state)
             if last_state == "Nu exista tranzitie":
-                print("Nu exista tranzitie pentru litera ", word[i])
+                i = len(word)
+            i += 1
         OK = 0
         for key in States:
             if key == last_state and States[key] == 'F':
-                print("Este un DFA.")
+                print("Cuvantul este acceptat.")
                 OK = 1
         if OK == 0:
-            print("Nu este un DFA.")
+            print("Cuvantul nu este acceptat.")
 else:
     print("Limbajul dat nu poate genera un DFA.")
 
