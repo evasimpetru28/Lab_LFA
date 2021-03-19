@@ -1,6 +1,6 @@
 import sys
 
-f = open("LFA_lab.txt")
+f = open("1.5h.in")
 
 #ignoram liniile cu comentarii
 
@@ -39,16 +39,18 @@ for i in range(1,4):
             line = f.readline()
             nr_line += 1
             while line.strip() != "End" and line != "":
-                # numaram cate stari initale avem
                 if line.strip().find(", S") == len(line.strip()) - 3:
-                    init = init + 1
+                    init = init + 1 # numaram cate stari initale avem
                     S = {line[0:len(line.strip()) - 2].strip():'S'}
                 else:
-                    # numaram cate stari finale avem
-                    if line.strip().find(", F") == len(line.strip()) - 3:
+                    if line.strip().find(", F") == len(line.strip()) - 3 and line.strip().find(", S, F") != len(line.strip()) - 6:
                         S = {line[0:len(line.strip()) - 2].strip(): 'F'}
                     else:
-                        S = {line.strip(): 'N'} # N de la None - pentru cele care nu au sunt stare initiala, nici stare finala
+                        if line.strip().find(", S, F") == len(line.strip()) - 6:
+                            S = {line[0:len(line.strip()) - 5].strip(): "S, F"}
+                            init = init + 1 # numaram cate stari initale avem
+                        else:
+                            S = {line.strip(): 'N'} # N de la None - pentru cele care nu au sunt stare initiala, nici stare finala
                 States.update(S) # States este un dictionar in care key reprezinta starea, iar value reprezinta tipul de stare('S' - initiala, 'F; - finala, 'N' - None)
                 line = f.readline()
                 nr_line += 1
@@ -96,20 +98,28 @@ f.close()
 if error == 0:
     word = input()
     last_state = ''
+    double_state = ''
     for key in States:
         if States[key] == 'S':
             last_state = key
-    for i in range(len(word)):
-        last_state = check_transition(word[i], last_state)
-        if last_state == "Nu exista tranzitie":
-            print("Nu exista tranzitie pentru litera ", word[i])
-    OK = 0
-    for key in States:
-        if key == last_state and States[key] == 'F':
+        else:
+            if States[key] == "S, F":
+                double_state = key
+    if double_state != '' and word == '':
             print("Este un DFA.")
-            OK = 1
-    if OK == 0:
-        print("Nu este un DFA.")
+            last_state = double_state
+    else:
+        for i in range(len(word)):
+            last_state = check_transition(word[i], last_state)
+            if last_state == "Nu exista tranzitie":
+                print("Nu exista tranzitie pentru litera ", word[i])
+        OK = 0
+        for key in States:
+            if key == last_state and States[key] == 'F':
+                print("Este un DFA.")
+                OK = 1
+        if OK == 0:
+            print("Nu este un DFA.")
 else:
     print("Limbajul dat nu poate genera un DFA.")
 
