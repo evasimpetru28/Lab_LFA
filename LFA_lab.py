@@ -13,14 +13,11 @@ init = 0
 nr_line = 0
 error = 0
 
-def check_letter(letter):
-    for i in Sigma:
-        if letter == Sigma[i]:
-            return 1
-    return 0
-
-#def check_transition(letter, letter2):
-
+def check_transition(letter, state):
+    for i in range(len(Transitions)):
+        if Transitions[i][0] == state and Transitions[i][1] == letter:
+            return Transitions[i][2]
+    return "Nu exista tranzitie"
 
 
 for i in range(1,4):
@@ -98,13 +95,21 @@ f.close()
 
 if error == 0:
     word = input()
+    last_state = ''
     for key in States:
         if States[key] == 'S':
             last_state = key
-    for i in range(len(word) - 2):
-        if check_letter(word[i]) == 1 and check_transition(word[i], word[i+1]) == 1:
-            print("Este in DFA.")
-
-    else:
-        print("Nu este in DFA.")
+    for i in range(len(word)):
+        last_state = check_transition(word[i], last_state)
+        if last_state == "Nu exista tranzitie":
+            print("Nu exista tranzitie pentru litera ", word[i])
+    OK = 0
+    for key in States:
+        if key == last_state and States[key] == 'F':
+            print("Este un DFA.")
+            OK = 1
+    if OK == 0:
+        print("Nu este un DFA.")
+else:
+    print("Limbajul dat nu poate genera un DFA.")
 
