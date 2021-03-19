@@ -1,0 +1,16 @@
+# Avem cuvintele
+Sigma:
+	0
+	1
+End
+# Urmeaza starile:
+States:
+	A, S
+	B, F
+End
+# Si tranzitiile
+Transitions:
+	A, 0, B
+	A, 1, B
+	B, 1, B
+	B, 0, B

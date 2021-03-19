@@ -2,7 +2,7 @@ import sys
 
 f = open(sys.argv[1])
 
-#ignoram liniile cu comentarii
+# ignoram liniile cu comentarii
 
 Sigma = []
 States = {}
@@ -13,6 +13,7 @@ init = 0
 nr_line = 0
 error = 0
 
+
 def check_transition(letter, state):
     for i in range(len(Transitions)):
         if Transitions[i][0] == state and Transitions[i][1] == letter:
@@ -20,7 +21,7 @@ def check_transition(letter, state):
     return "Nu exista tranzitie"
 
 
-for i in range(1,4):
+for i in range(1, 4):
     line = f.readline()
     nr_line += 1
     while line[:1] == "#":
@@ -30,7 +31,7 @@ for i in range(1,4):
         line = f.readline()
         nr_line += 1
         while line.strip() != "End" and line != "":
-            Sigma.append(line.strip()) # Sigma este o lista de cuvinte
+            Sigma.append(line.strip())  # Sigma este o lista de cuvinte
             line = f.readline()
             nr_line += 1
         print("Sigma", Sigma, sep=": ")
@@ -40,18 +41,18 @@ for i in range(1,4):
             nr_line += 1
             while line.strip() != "End" and line != "":
                 if line.strip().find(", S") == len(line.strip()) - 3:
-                    init = init + 1 # numaram cate stari initale avem
-                    S = {line[0:len(line.strip()) - 2].strip():'S'}
+                    init = init + 1  # numaram cate stari initale avem
+                    S = {line[0:len(line.strip()) - 2].strip(): 'S'}
                 else:
-                    if line.strip().find(", F") == len(line.strip()) - 3 and line.strip().find(", S, F") != len(line.strip()) - 6:
+                    if line.strip().find(", F") == len(line.strip())-3 and line.strip().find(", S, F") != len(line.strip())-6:
                         S = {line[0:len(line.strip()) - 2].strip(): 'F'}
                     else:
                         if line.strip().find(", S, F") == len(line.strip()) - 6:
-                            S = {line[0:len(line.strip()) - 5].strip(): "S, F"}
-                            init = init + 1 # numaram cate stari initale avem
+                            S = {line[0:len(line.strip()) - 5].strip(): "S, F"}  # schimbare: -5 -> -2 ??
+                            init = init + 1  # numaram cate stari initale avem
                         else:
-                            S = {line.strip(): 'N'} # N de la None - pentru cele care nu au sunt stare initiala, nici stare finala
-                States.update(S) # States este un dictionar in care key reprezinta starea, iar value reprezinta tipul de stare('S' - initiala, 'F; - finala, 'N' - None)
+                            S = {line.strip(): 'N'}  # N: None - nu au stare initiala/ finala
+                States.update(S)  # States: dictionar | key: starea, value: tipul stare(S - init, F - fina, N - None)
                 line = f.readline()
                 nr_line += 1
             if init != 1:
@@ -63,14 +64,14 @@ for i in range(1,4):
         else:
             line = f.readline()
             nr_line += 1
-            while line != "":
+            while line != "" and line.strip() != "End":
                 t = line.strip().split(", ")
                 OK1 = 0
                 OK2 = 0
                 for key in States:
-                    if t[0] == key: # verificam daca prima stare este in States
+                    if t[0] == key:  # verificam daca prima stare este in States
                         OK1 = 1
-                    if t[2] == key: # verificam daca a doua stare este in States
+                    if t[2] == key:  # verificam daca a doua stare este in States
                         OK2 = 1
                 if OK1 == 0:
                     print("EROARE: nu exista prima stare la linia: ", nr_line)
@@ -82,13 +83,13 @@ for i in range(1,4):
                     break
                 OK = 0
                 for s in Sigma:
-                    if t[1] == s: # verificam daca t[1], cuvantul din mijloc, este in Sigma
+                    if t[1] == s:  # verificam daca t[1], cuvantul din mijloc, este in Sigma
                         OK = 1
                 if OK == 0:
                     print("EROARE: nu exista cuvantul la linia: ", nr_line)
                     error = 1
                     break
-                Transitions.append(t) # Transitions este  lista ,a carei elemente sunt liste
+                Transitions.append(t)  # Transitions este  lista ,a carei elemente sunt liste
                 line = f.readline()
                 nr_line += 1
             print("Transitions", Transitions, sep=": ")
@@ -107,8 +108,8 @@ if error == 0:
                 double_state = key
                 last_state = double_state
     if double_state != '' and word == '':
-            print("Cuvantul vid este acceptat.")
-            last_state = double_state
+        print("Cuvantul vid este acceptat.")
+        last_state = double_state
     else:
         i = 0
         while i <= len(word)-1:
@@ -125,4 +126,3 @@ if error == 0:
             print("Cuvantul nu este acceptat.")
 else:
     print("Limbajul dat nu poate genera un DFA.")
-
